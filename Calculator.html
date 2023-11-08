@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculator</title>
+</head>
+<body id="bd">
+    First Input: <input type="text" id="first" name="first_num">
+    <div>
+        <input type="radio" name="operator" value="+" checked>+
+        <input type="radio" name="operator" value="-">-
+        <input type="radio" name="operator" value="*">*
+        <input type="radio" name="operator" value="/">/
+    </div>
+    Second Input: <input type="text" id="second" name="second_num"><br>
+    Result: <input type="text" id="result" name="username" value="" disabled> 
+
+
+    <script>
+        // input check
+        const firstInput = document.getElementById('first');
+        const secondInput = document.getElementById('second');
+    
+        firstInput.addEventListener('input', function() {
+            upperCase(this);
+        });
+        secondInput.addEventListener('input', function() {
+            upperCase(this);
+        });
+        function upperCase(obj){
+            if(isNaN(obj.value) && !/^-$/.test(obj.value)){
+                alert("Invalid input")
+                obj.value="";
+            }
+            if(!/^[+-]?\d*\.{0,1}\d{0,1}$/.test(obj.value)){
+                obj.value=obj.value.replace(/\.\d{2,}$/,obj.value.substr(obj.value.indexOf('.'),5));
+            }
+        }
+    
+        // calculate
+        const operatorRadios = document.getElementsByName('operator');
+        const result = document.getElementById('result');
+    
+        firstInput.addEventListener('input', updateResultField);
+        secondInput.addEventListener('input', updateResultField);
+    
+        for (let i = 0; i < operatorRadios.length; i++) {
+            operatorRadios[i].addEventListener('change', updateResultField);
+        }
+    
+        function updateResultField() {
+            const firstValue = parseFloat(firstInput.value) || 0;
+            const secondValue = parseFloat(secondInput.value) || 0;
+            var operator = "+";
+            for (let i = 0; i < operatorRadios.length; i++) {
+                if (operatorRadios[i].checked) {
+                    operator = operatorRadios[i].value;
+                    break;
+                }
+            }
+    
+            let results = 0;
+            switch (operator) {
+                case '+':
+                    results = firstValue + secondValue;
+                    break;
+                case '-':
+                    results = firstValue - secondValue;
+                    break;
+                case '*':
+                    results = firstValue * secondValue;
+                    break;
+                case '/':
+                    if(secondValue==0){
+                        results = "The divisor can't be 0!";
+                    }else{
+                        results = firstValue / secondValue;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            result.value = results.toFixed(4);
+        }
+    </script>
+</body>
+</html>
+
+
+

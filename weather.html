@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="static/weather.css" type="text/css">
+</head>
+<body id="bd">
+    <div class="weather" id="weatherWidget">
+        <div class="weather-loc" id="loc"></div>
+        <div class="weather-humidity" id="humidity"></div>
+        <div class="weather-temp" id="temp"></div>
+        <img class="weather-tomorrow" id="tmr" src="temp" alt=""/>
+        <img class="weather-dayaftertomorrow" id="dayAfterTmr" src="temp" alt=""/>
+        <button type="button" id="reload">Reload</button>    
+    </div>
+
+    <script>
+        function fetchWeather(event) {
+            var temp;
+            fetch("https://classes.engineering.wustl.edu/cse330/content/weather_json.php", {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var locDiv = document.getElementById("loc");
+                    locDiv.innerHTML = "<b>" + data.location.city + "</b> " + data.location.state;
+                    var tempDiv = document.getElementById("temp");
+                    tempDiv.innerHTML = data.current.temp;
+                    var humDiv = document.getElementById("humidity");
+                    humDiv.innerHTML = data.atmosphere.humidity;
+                    const tmrUrl = "http://us.yimg.com/i/us/nws/weather/gr/" + data.tomorrow.code + "ds.png";
+                    var tmrDiv = document.getElementById("tmr").src = tmrUrl;
+                    const dayAftertmrUrl = "http://us.yimg.com/i/us/nws/weather/gr/" + data.dayafter.code + "ds.png";
+                    var tmrDiv = document.getElementById("dayAfterTmr").src = tmrUrl;
+                })
+                .catch(err => console.error(err));  
+        }
+        document.addEventListener("DOMContentLoaded", fetchWeather, false);
+    
+        // reload button
+        const reloadBtn = document.getElementById('reload');
+        reloadBtn.addEventListener("click", fetchWeather, false);
+    </script>
+</body>
+</html>
